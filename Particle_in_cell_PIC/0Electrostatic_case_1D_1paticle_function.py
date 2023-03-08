@@ -20,6 +20,19 @@ def init(E0=1,nx=100):
 	x_grid=np.linspace(0,Lx,len(Ex))
 	return Ex,x_grid
 
+def particle_mover(x,v,t,x_grid,Ex,dt):
+	i=np.argmin(abs(x-x_grid))
+	#F=q*E(x)
+	F=q*Ex[i] 
+	a=F/m 
+	dv=a*dt
+	v=v+dv
+	x=x+v*dt
+	t=t+dt
+
+	return x,v,a,t
+
+
 def particle_calc(Ex,x_grid,dt,x0,v0,t0):
 	keep_going=True
 	x=x0
@@ -29,18 +42,12 @@ def particle_calc(Ex,x_grid,dt,x0,v0,t0):
 	a_list=[]
 	t_list=[]
 	while keep_going:
-		#find the location of the particle
-		i=np.argmin(abs(x-x_grid))
-		#F=q*E(x)
-		F=q*Ex[i] 
-		a=F/m 
-		dv=a*dt
-		v=v+dv
-		x=x+v*dt
-		t=t+dt
+		x,v,a,t=particle_mover(x,v,t,x_grid,Ex,dt)
+
 		x_list.append(x)
 		a_list.append(a)
 		t_list.append(t)
+
 		if x>Lx or x<0:
 			keep_going=False
 
